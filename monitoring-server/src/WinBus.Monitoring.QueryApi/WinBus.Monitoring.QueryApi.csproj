@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WinBus.Monitoring.Core\WinBus.Monitoring.Core.csproj" />
+    <ProjectReference Include="..\WinBus.Monitoring.Contracts\WinBus.Monitoring.Contracts.csproj" />
+    <ProjectReference Include="..\WinBus.Monitoring.Infrastructure\WinBus.Monitoring.Infrastructure.csproj" />
+    <ProjectReference Include="..\WinBus.Monitoring.Infrastructure.SqlServer\WinBus.Monitoring.Infrastructure.SqlServer.csproj" />
+  </ItemGroup>
+
+</Project>

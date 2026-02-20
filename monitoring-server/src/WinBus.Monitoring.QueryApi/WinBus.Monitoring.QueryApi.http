@@ -1,0 +1,6 @@
+@WinBus.Monitoring.QueryApi_HostAddress = http://localhost:5010
+
+GET {{WinBus.Monitoring.QueryApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

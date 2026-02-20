@@ -1,0 +1,79 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+  xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+  <Package
+    Name="WinBus Utility"
+    Manufacturer="WinBus"
+    Version="1.0.0.0"
+    UpgradeCode="B3086E18-768C-468B-8B52-5A22BCBEE193"
+    Scope="perMachine"
+    Language="1033">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of WinBus Utility is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+    <Icon Id="WinBusAppIcon" SourceFile="..\bin\Release\net8.0-windows\win-x64\publish\WinBus.Utility.exe" />
+    <Property Id="ARPPRODUCTICON" Value="WinBusAppIcon" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="WinBus Utility" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ProgramMenuWinBusFolder" Name="WinBus Utility" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder" />
+
+    <Property Id="INSTALLLEVEL" Value="1" />
+    <ui:WixUI Id="WixUI_FeatureTree" />
+
+    <Feature Id="MainFeature" Title="WinBus Utility" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+    </Feature>
+
+    <Feature Id="DesktopShortcutFeature" Title="Desktop Shortcut" Description="Creates a desktop shortcut for WinBus Utility." Level="2" AllowAdvertise="no">
+      <ComponentRef Id="cmpDesktopShortcut" />
+    </Feature>
+  </Package>
+
+  <Fragment>
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="cmpExe" Guid="*">
+        <File Source="..\bin\Release\net8.0-windows\win-x64\publish\WinBus.Utility.exe" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="ProgramMenuWinBusFolder">
+      <Component Id="cmpStartMenuShortcut" Guid="*">
+        <Shortcut
+          Id="StartMenuShortcut"
+          Name="WinBus Utility"
+          Description="Windows 11 Pro tuning utility"
+          Target="[INSTALLFOLDER]WinBus.Utility.exe"
+          WorkingDirectory="INSTALLFOLDER"
+          Icon="WinBusAppIcon" />
+        <RemoveFolder Id="RemoveProgramMenuWinBusFolder" On="uninstall" />
+        <RegistryValue Root="HKCU" Key="Software\WinBus\WinBusUtility" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <StandardDirectory Id="DesktopFolder">
+      <Component Id="cmpDesktopShortcut" Guid="*">
+        <Shortcut
+          Id="DesktopShortcut"
+          Name="WinBus Utility"
+          Description="Windows 11 Pro tuning utility"
+          Target="[INSTALLFOLDER]WinBus.Utility.exe"
+          WorkingDirectory="INSTALLFOLDER"
+          Icon="WinBusAppIcon" />
+        <RegistryValue Root="HKCU" Key="Software\WinBus\WinBusUtility" Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </StandardDirectory>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents">
+      <ComponentRef Id="cmpExe" />
+      <ComponentRef Id="cmpStartMenuShortcut" />
+    </ComponentGroup>
+  </Fragment>
+</Wix>

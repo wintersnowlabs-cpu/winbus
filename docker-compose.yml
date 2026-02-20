@@ -1,0 +1,73 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: winbus-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "${SA_PASSWORD}"
+    ports:
+      - "14333:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"${SA_PASSWORD}\" -Q \"SELECT 1\" || exit 1"]
+      interval: 20s
+      timeout: 10s
+      retries: 10
+
+  monitoring-api:
+    build:
+      context: .
+      dockerfile: monitoring-server/src/WinBus.Monitoring.Api/Dockerfile
+    container_name: winbus-monitoring-api
+    environment:
+      ASPNETCORE_URLS: "http://+:8080"
+      MonitoringApi__ApiKey: "${MONITORING_API_KEY}"
+      MonitoringApi__StoreProvider: "SqlServer"
+      MonitoringApi__RetentionHours: "24"
+      MonitoringApi__ActiveWindowMinutes: "10"
+      MonitoringApi__SqlServer__ConnectionString: "Server=sqlserver,1433;Database=WinBusMonitoring;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;"
+      MonitoringApi__SqlServer__TableName: "StatusEvents"
+      MonitoringApi__SqlServer__AutoCreateSchema: "true"
+    ports:
+      - "5000:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  monitoring-query-api:
+    build:
+      context: .
+      dockerfile: monitoring-server/src/WinBus.Monitoring.QueryApi/Dockerfile
+    container_name: winbus-monitoring-query-api
+    environment:
+      ASPNETCORE_URLS: "http://+:8080"
+      MonitoringApi__ApiKey: "${MONITORING_API_KEY}"
+      MonitoringApi__StoreProvider: "SqlServer"
+      MonitoringApi__RetentionHours: "24"
+      MonitoringApi__ActiveWindowMinutes: "10"
+      MonitoringApi__SqlServer__ConnectionString: "Server=sqlserver,1433;Database=WinBusMonitoring;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;"
+      MonitoringApi__SqlServer__TableName: "StatusEvents"
+      MonitoringApi__SqlServer__AutoCreateSchema: "true"
+    ports:
+      - "5001:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  monitoring-ui:
+    build:
+      context: .
+      dockerfile: monitoring-ui/Dockerfile
+      args:
+        VITE_MONITORING_API_BASE_URL: ""
+        VITE_MONITORING_API_KEY: "${MONITORING_API_KEY}"
+    container_name: winbus-monitoring-ui
+    ports:
+      - "8088:80"
+    depends_on:
+      - monitoring-api
+      - monitoring-query-api
+
+volumes:
+  sqlserver-data:

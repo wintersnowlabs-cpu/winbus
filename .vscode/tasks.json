@@ -1,0 +1,57 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "WinBus: Build EXE",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".\\scripts\\Build-Utility-Exe.ps1"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "WinBus: Run Utility",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".\\scripts\\Run-Utility.ps1"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "WinBus: Build MSI",
+      "type": "shell",
+      "command": "dotnet",
+      "args": [
+        "build",
+        ".\\installer\\WinBus.Installer.wixproj",
+        "-c",
+        "Release"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "WinBus: Build+Sign Installer",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".\\scripts\\Create-And-Sign-Installer.ps1"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}

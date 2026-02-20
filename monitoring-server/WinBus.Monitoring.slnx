@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WinBus.Monitoring.Api/WinBus.Monitoring.Api.csproj" />
+    <Project Path="src/WinBus.Monitoring.Contracts/WinBus.Monitoring.Contracts.csproj" />
+    <Project Path="src/WinBus.Monitoring.Core/WinBus.Monitoring.Core.csproj" />
+    <Project Path="src/WinBus.Monitoring.Infrastructure.SqlServer/WinBus.Monitoring.Infrastructure.SqlServer.csproj" />
+    <Project Path="src/WinBus.Monitoring.Infrastructure/WinBus.Monitoring.Infrastructure.csproj" />
+    <Project Path="src/WinBus.Monitoring.QueryApi/WinBus.Monitoring.QueryApi.csproj" />
+  </Folder>
+</Solution>
